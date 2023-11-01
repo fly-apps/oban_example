@@ -13,17 +13,15 @@ defmodule ObanExample.Application do
       {Phoenix.PubSub, name: ObanExample.PubSub},
       # Start the Finch HTTP client for sending emails
       {Finch, name: ObanExample.Finch},
+      {Oban, oban_config()},
       # Start a worker by calling: ObanExample.Worker.start_link(arg)
       # {ObanExample.Worker, arg},
       # Start to serve requests, typically the last entry
       ObanExampleWeb.Endpoint
     ]
 
-    current_region = System.get_env("FLY_REGION", "local")
-    primary_region = System.get_env("PRIMARY_REGION", "local")
-
     children =
-      if current_region == primary_region do
+      if is_primary?() do
         [ObanExample.Repo.Local, ObanExample.Repo.Replica.Local] ++ children
       else
         children
@@ -33,6 +31,22 @@ defmodule ObanExample.Application do
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: ObanExample.Supervisor]
     Supervisor.start_link(children, opts)
+  end
+
+  defp oban_config do
+    if is_primary?() do
+      Application.fetch_env!(:oban_example, Oban)
+    else
+      [
+        repo: Application.fetch_env!(:oban_example, [Oban, :repo]),
+        plugins: false,
+        queues: false
+      ]
+    end
+  end
+
+  defp is_primary? do
+    System.get_env("FLY_REGION", "local") == System.get_env("PRIMARY_REGION", "local")
   end
 
   # Tell Phoenix to update the endpoint configuration

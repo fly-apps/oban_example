@@ -20,6 +20,8 @@ config :oban_example, ObanExampleWeb.Endpoint,
   secret_key_base: "QB4phEq1IXHJq0BvdJtTAqsOhM/VVHzkEoYrZfOwTGz/wqo43ELz+QuMPHYGqoFO",
   server: false
 
+config :oban_example, Oban, testing: :inline
+
 # In test we don't send emails.
 config :oban_example, ObanExample.Mailer, adapter: Swoosh.Adapters.Test
 
