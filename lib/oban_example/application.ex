@@ -9,7 +9,6 @@ defmodule ObanExample.Application do
   def start(_type, _args) do
     children = [
       ObanExampleWeb.Telemetry,
-      ObanExample.Repo,
       {DNSCluster, query: Application.get_env(:oban_example, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: ObanExample.PubSub},
       # Start the Finch HTTP client for sending emails
@@ -19,6 +18,16 @@ defmodule ObanExample.Application do
       # Start to serve requests, typically the last entry
       ObanExampleWeb.Endpoint
     ]
+
+    current_region = System.get_env("FLY_REGION", "local")
+    primary_region = System.get_env("PRIMARY_REGION", "local")
+
+    children =
+      if current_region == primary_region do
+        [ObanExample.Repo.Local, ObanExample.Repo.Replica.Local] ++ children
+      else
+        children
+      end
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
