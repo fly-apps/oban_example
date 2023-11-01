@@ -6,4 +6,6 @@ defmodule ObanExample do
   Contexts are also responsible for managing your data, regardless
   if it comes from the database, an external API or others.
   """
+
+  def current_region, do: System.get_env("FLY_REGION", "local")
 end
