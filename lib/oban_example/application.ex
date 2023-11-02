@@ -8,12 +8,13 @@ defmodule ObanExample.Application do
   @impl true
   def start(_type, _args) do
     children = [
+      Fly.RPC,
       ObanExampleWeb.Telemetry,
       {DNSCluster, query: Application.get_env(:oban_example, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: ObanExample.PubSub},
       # Start the Finch HTTP client for sending emails
       {Finch, name: ObanExample.Finch},
-      {Oban, oban_config()},
+      {Oban, Application.fetch_env!(:oban_example, Oban)},
       # Start a worker by calling: ObanExample.Worker.start_link(arg)
       # {ObanExample.Worker, arg},
       # Start to serve requests, typically the last entry
@@ -21,32 +22,18 @@ defmodule ObanExample.Application do
     ]
 
     children =
-      if is_primary?() do
+      if Fly.RPC.is_primary?() do
         [ObanExample.Repo.Local, ObanExample.Repo.Replica.Local] ++ children
       else
         children
       end
 
+    :ok = Oban.Telemetry.attach_default_logger(level: :debug, encode: false)
+
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: ObanExample.Supervisor]
     Supervisor.start_link(children, opts)
-  end
-
-  defp oban_config do
-    if is_primary?() do
-      Application.fetch_env!(:oban_example, Oban)
-    else
-      [
-        repo: Application.fetch_env!(:oban_example, [Oban, :repo]),
-        plugins: false,
-        queues: false
-      ]
-    end
-  end
-
-  defp is_primary? do
-    System.get_env("FLY_REGION", "local") == System.get_env("PRIMARY_REGION", "local")
   end
 
   # Tell Phoenix to update the endpoint configuration

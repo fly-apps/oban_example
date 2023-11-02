@@ -26,9 +26,10 @@ config :oban_example, ObanExampleWeb.Endpoint,
   live_view: [signing_salt: "dDgozHOB"]
 
 config :oban_example, Oban,
-    repo: ObanExample.Repo,
-    plugins: [Oban.Plugins.Pruner],
-    queues: [default: 10]
+  repo: ObanExample.Repo,
+  notifier: Oban.Notifiers.PG,
+  plugins: [Oban.Plugins.Pruner],
+  queues: [default: 10]
 
 # Configures the mailer
 #
