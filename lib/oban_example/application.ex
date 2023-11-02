@@ -15,6 +15,7 @@ defmodule ObanExample.Application do
       # Start the Finch HTTP client for sending emails
       {Finch, name: ObanExample.Finch},
       {Oban, Application.fetch_env!(:oban_example, Oban)},
+      ObanExample.JobMachine,
       # Start a worker by calling: ObanExample.Worker.start_link(arg)
       # {ObanExample.Worker, arg},
       # Start to serve requests, typically the last entry
