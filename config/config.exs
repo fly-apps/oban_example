@@ -22,6 +22,11 @@ config :oban_example, ObanExampleWeb.Endpoint,
   pubsub_server: ObanExample.PubSub,
   live_view: [signing_salt: "dDgozHOB"]
 
+config :oban_example, Oban,
+    repo: ObanExample.Repo,
+    plugins: [Oban.Plugins.Pruner],
+    queues: [default: 10]
+
 # Configures the mailer
 #
 # By default it uses the "Local" adapter which stores the emails

@@ -14,11 +14,14 @@ defmodule ObanExample.Application do
       {Phoenix.PubSub, name: ObanExample.PubSub},
       # Start the Finch HTTP client for sending emails
       {Finch, name: ObanExample.Finch},
+      {Oban, Application.fetch_env!(:oban_example, Oban)},
       # Start a worker by calling: ObanExample.Worker.start_link(arg)
       # {ObanExample.Worker, arg},
       # Start to serve requests, typically the last entry
       ObanExampleWeb.Endpoint
     ]
+
+    :ok = Oban.Telemetry.attach_default_logger(level: :debug)
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
