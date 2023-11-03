@@ -8,8 +8,9 @@ defmodule ObanExample.Application do
   @impl true
   def start(_type, _args) do
     children = [
+      Fly.RPC,
       ObanExampleWeb.Telemetry,
-      ObanExample.Repo,
+      ObanExample.Repo.Local,
       {DNSCluster, query: Application.get_env(:oban_example, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: ObanExample.PubSub},
       # Start the Finch HTTP client for sending emails

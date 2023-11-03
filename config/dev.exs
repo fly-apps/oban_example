@@ -1,7 +1,7 @@
 import Config
 
 # Configure your database
-config :oban_example, ObanExample.Repo,
+config :oban_example, ObanExample.Repo.Local,
   username: "postgres",
   password: "postgres",
   hostname: "localhost",

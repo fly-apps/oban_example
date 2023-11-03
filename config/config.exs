@@ -8,7 +8,7 @@
 import Config
 
 config :oban_example,
-  ecto_repos: [ObanExample.Repo],
+  ecto_repos: [ObanExample.Repo.Local],
   generators: [timestamp_type: :utc_datetime]
 
 # Configures the endpoint
