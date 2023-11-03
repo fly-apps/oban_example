@@ -10,7 +10,6 @@ defmodule ObanExample.Application do
     children = [
       Fly.RPC,
       ObanExampleWeb.Telemetry,
-      ObanExample.Repo.Local,
       {DNSCluster, query: Application.get_env(:oban_example, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: ObanExample.PubSub},
       # Start the Finch HTTP client for sending emails
@@ -22,6 +21,13 @@ defmodule ObanExample.Application do
       # Start to serve requests, typically the last entry
       ObanExampleWeb.Endpoint
     ]
+
+    children =
+      if Fly.is_primary?() do
+        [ObanExample.Repo.Local, ObanExample.Repo.Replica.Local] ++ children
+      else
+        children
+      end
 
     :ok = Oban.Telemetry.attach_default_logger(level: :debug)
 

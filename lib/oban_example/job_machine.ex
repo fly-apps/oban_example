@@ -17,15 +17,14 @@ defmodule ObanExample.JobMachine do
 
   @impl true
   def handle_info(:enqueue_job, state) do
-    "✨ I'm enqueued! ✨"
+    "✨ I'm enqueued from #{Fly.my_region()}! ✨"
     |> Logger.info()
 
-    %{action: "insert 🍕"}
+    %{action: "insert 🍕", from: Fly.my_region()}
     |> BusinessTime.new()
     |> Oban.insert()
     |> inspect()
     |> Logger.info()
-
 
     schedule_work()
     {:noreply, state}

@@ -10,6 +10,16 @@ config :oban_example, ObanExample.Repo.Local,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
 
+config :oban_example, ObanExample.Repo.Replica.Local,
+  username: "postgres",
+  password: "postgres",
+  hostname: "localhost",
+  database: "oban_example_dev",
+  stacktrace: true,
+  show_sensitive_data_on_connection_error: true,
+  pool_size: 10,
+  read_only: true
+
 # For development, we disable any cache and enable
 # debugging and code reloading.
 #

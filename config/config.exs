@@ -11,6 +11,9 @@ config :oban_example,
   ecto_repos: [ObanExample.Repo.Local],
   generators: [timestamp_type: :utc_datetime]
 
+config :oban_example, ObanExample.Repo.Local, priv: "priv/repo"
+config :oban_example, ObanExample.Repo.Replica, local_repo: ObanExample.Repo.Replica.Local
+
 # Configures the endpoint
 config :oban_example, ObanExampleWeb.Endpoint,
   url: [host: "localhost"],
