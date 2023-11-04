@@ -36,8 +36,14 @@ if config_env() == :prod do
     pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
     socket_options: maybe_ipv6
 
+  follower_url =
+    database_url
+    |> URI.parse()
+    |> Map.put(:port, 5433)
+    |> URI.to_string()
+
   config :oban_example, ObanExample.Repo.Replica.Local,
-    url: database_url,
+    url: follower_url,
     pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
     socket_options: maybe_ipv6
 
