@@ -17,7 +17,7 @@ defmodule ObanExampleWeb.Router do
   scope "/", ObanExampleWeb do
     pipe_through :browser
 
-    get "/", PageController, :home
+    live "/", HomePageLive
   end
 
   # Other scopes may use custom stacks.
