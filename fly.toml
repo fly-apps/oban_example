@@ -4,7 +4,7 @@
 #
 
 app = "oban-example"
-primary_region = "yyz"
+primary_region = "bog"
 kill_signal = "SIGTERM"
 swap_size_mb = 512
 
